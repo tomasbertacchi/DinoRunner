@@ -27,7 +27,6 @@ class Nivel1 extends Phaser.Scene{
         plataformas = mapa.createStaticLayer("plataformas", tilemap3)
         fondo = mapa.createStaticLayer("fondo", tilemap3)
 
-        monedaLayer = mapa.getObjectLayer("moneda")["objects"]
         naranjasLayer = mapa.getObjectLayer("naranja")["objects"]
         bananasLayer = mapa.getObjectLayer("banana")["objects"]
         manzanasLayer = mapa.getObjectLayer("manzana")["objects"]
