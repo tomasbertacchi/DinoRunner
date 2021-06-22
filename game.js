@@ -6,11 +6,11 @@ let gameConfig = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         parent: "thegame",
-        width: 2048,
+        width: 1024,
         height: 768,
         backgroundColor: '#351f1b'
       },
-    scene: [Preloader, Nivel1, Creditos],
+    scene: [Preloader, Nivel1,GameUI, Creditos],
 
     scale: {
         zoom: 1
@@ -20,7 +20,7 @@ let gameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 800 },
-            debug: true
+            debug: false,
         }
     }
 
@@ -41,11 +41,9 @@ var powerup;
 var monedaLayer;
 var monedas;
 var puntuacion = 0;
-var textoPuntuacion;
 var salto;
 var pinchosObjects;
 var vidas = 3;
-var textoVidas;
 var meta;
 var naranjas;
 var naranjasLayer;
@@ -57,6 +55,13 @@ var spikes;
 var spikes2;
 var spikes3;
 var fondo;
+var timeText;
+var timedEvent;
+var initialTime = 30;
+var textoVidas;
+var textoPuntuacion;
+
+
 
 
 
