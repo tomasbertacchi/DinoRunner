@@ -4,6 +4,7 @@ class Preloader extends Phaser.Scene{
         super("Preloader");
     }
     preload(){
+        this.registry.set('vidas', 3)
         this.load.audio("saltar", "./assets/musica_sonidos/saltar.wav")
         this.load.audio("fruta", "./assets/musica_sonidos/fruta.wav")
         this.load.audio("correr", "./assets/musica_sonidos/correr.wav")
@@ -31,11 +32,62 @@ class Preloader extends Phaser.Scene{
         this.load.image("cielo2", "./assets/images/background/cielo2.jpg")
         this.load.image("corazonlleno", "./assets/images/player/corazonlleno.png")
         this.load.image("corazonvacio", "./assets/images/player/corazonvacio.png")
-  
+        this.registry.set('agarrafruta', 0)
+        this.load.spritesheet('dinonaranja', './assets/images/player/dinonaranja.png', { frameWidth: 24, frameHeight: 24 });
+        this.load.spritesheet('dinomanzana', './assets/images/player/dinomanzana.png', { frameWidth: 24, frameHeight: 24 });
+        this.load.spritesheet('dinobanana', './assets/images/player/dinobanana.png', { frameWidth: 24, frameHeight: 24 });
     }
     create(){
 
         this.scene.start("nivel1");
+
+        //ANIMACIONES 
+        //corre hacia la izquierda
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('dino', { start: 4, end: 10 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right2',
+            frames: this.anims.generateFrameNumbers('dinonaranja', { start: 4, end: 10 }),
+            frameRate: 10,
+            repeat: -1
+        });
+   
+        this.anims.create({
+            key: 'right3',
+            frames: this.anims.generateFrameNumbers('dinobanana', { start: 4, end: 10 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right4',
+            frames: this.anims.generateFrameNumbers('dinomanzana', { start: 4, end: 10 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 

@@ -9,7 +9,7 @@ class Nivel1 extends Phaser.Scene{
         
         //sonidos y musica
         this.musica = this.sound.add("musicafondo",{
-            volume: 0.1,
+            volume: 0.05,
             loop: true
         });
 
@@ -29,10 +29,20 @@ class Nivel1 extends Phaser.Scene{
         })
 
         //-------------------------------------------------
-        gameOver = false;
 
+        // VARIABLES VARIAS :D
+        gameOver = false;
+        this.vidas = 3;
+        this.puntuacion = 0;
+
+        // BACKGROUND
         var background = this.add.image(430,400, "cielo")
         .setScrollFactor(0)
+
+        // TEXTO INICIO
+        empezarTexto = this.add.text (20 , 650, "Press right key to start",{
+            fontSize: 16
+        })
 
         //creacion inputs
         cursors = this.input.keyboard.createCursorKeys();
@@ -137,7 +147,7 @@ class Nivel1 extends Phaser.Scene{
         });
 
         //PLAYER
-        player = this.physics.add.sprite(0, 750, 'dino');
+        player = this.physics.add.sprite(10, 750, 'dino');
         player.setScale(1)
         //cambiamos el tamaño de hitbox del jugador
         player.setSize(10,16)
@@ -150,78 +160,70 @@ class Nivel1 extends Phaser.Scene{
         this.physics.add.overlap(player, manzanas, this.agarrarManzana, null, this);
         this.physics.add.overlap(player, naranjas, this.agarrarNaranja, null, this);
         this.physics.add.overlap(player, bananas, this.agarrarBanana,null, this);
-        this.physics.add.collider(player, final, this.hitPinchos, null, null)
-        this.physics.add.collider(player, spikes, this.hitPinchos, null, null)
-        this.physics.add.collider(player, spikes2, this.hitPinchos, null, null)
-
-        //GUI TEXTO
-        timeText = this.add.text(450, 20, "Tiempo: 30",{ fontFamily: "Arial", fontSize: 32})
-        timedEvent = this.time.addEvent({ delay: 1000, callback: this.onSecond, callbackScope: this, loop: true });
-
-        textoPuntuacion = this.add.text(10 , 20 , "Puntuacion: 0",{ fontFamily: "Arial", fontSize: 32}).setScrollFactor(0)
-        textoVidas = this.add.text(810 , 20 , "Vidas: 3",{ fontFamily: "Arial", fontSize: 32})
-        .setScrollFactor(0)
-    
+        this.physics.add.collider(player, spikes, this.hitPinchos, null, this)
+        this.physics.add.collider(player, spikes2, this.hitPinchos, null, this)
+        this.physics.add.collider(player, spikes3, this.hitPinchos, null, this)
       
     }
     
     update(){
-        timeText.setScrollFactor(0)
-
         if (gameOver)
         {       
             return
         }
 
+        if (cursors.right.isDown){
+            this.empiezaCorrer()
+            empezarTexto.setVisible(false)
+        }
+
+        const isJumpJustDown = Phaser.Input.Keyboard.JustDown(cursors.up)
+        const tocaSuelo = player.body.blocked.down
+
         //SALTO JUGADOR. FLECHA ARRIBA + JUGADOR TOCANDO SUELO.
-        if (cursors.up.isDown && player.body.blocked.down){
-            player.setVelocityY(-310);
-            player.anims.play("salto", true);
+        if(cursors.up.isDown && tocaSuelo)
+            player.setVelocityY(-300)
+            cantidadSaltos ++;
+        if(tocaSuelo && !isJumpJustDown){
+            cantidadSaltos = 0;
         }
-        //SI EL JUGADOR TIENE VIDA EL JUGADOR CORRE Y TIENE ACTIVA LA ANIMACION
-        if(vidas > 0){
-            player.setVelocityX(150);
-            player.anims.play('right', true);
-        }
-
-        //SI EL JUGADOR ESTA TOCANDO EL SUELO CARGA SONIDO CORRIENDO
-        //SI EL JUGADOR MUERE CARGA EL GAME OVER Y DETIENE SONIDOS.
-
-        if (vidas == 0){
+        if (this.vidas == 0){
             this.gameOver();
         }
         // camara centrada en jugador
         camara.centerOn(player.x, player.y)
-        //camara.setZoom(2)    
+        camara.setZoom(2)    
 
     }
 
+    empiezaCorrer (){
+        player.setVelocityX(150)
+        player.anims.play("right", true)
+    }
 
     hitPinchos(player, spikes){
-        player.setX(0)
+        this.vidas --;
+        this.registry.set("vidas", this.vidas)
+        player.setX(10)
         player.setY(720)
-        vidas --;
-        puntuacion = 0;
-        textoVidas.setText("Vidas: " + vidas)
-        initialTime = 31
+        console.log("pierde vida")
     }
 
     gameOver() {   
         gameOver = true;
         player.setTint(0xff0000);
-        player.disableBody();
+        player.disableBody(true);
         this.physics.pause();
         player.setX(1024/2);
         player.setY(768/2 - 100);
         player.anims.stop("right", true);
         this.musica.stop();
-        
+        this.scene.pause("ui")
 
         var gameOverButton = this.add.text(game.width/2, game.height/2, 'Perdiste', { fontFamily: 'Arial', fontSize: 70, color: '#ff0000' })
         gameOverButton.setInteractive()
         gameOverButton.on('pointerdown', () => this.scene.start('creditos'));
         Phaser.Display.Align.In.Center(gameOverButton, this.add.zone(1024/2, 768/2, 1024, 768));    
-
     }
 
 
@@ -235,6 +237,8 @@ class Nivel1 extends Phaser.Scene{
         player.setX(1024/2);
         player.setY(768/2 - 100);
         this.musica.stop();
+        this.scene.pause("ui")
+
         var botonGanar = this.add.text(1024/2, 768/2, 'Ganaste', { fontFamily: 'Arial', fontSize: 70, color: 'green' })
         botonGanar.setInteractive()
         botonGanar.on('pointerdown', () => this.scene.start('creditos'));
@@ -243,29 +247,32 @@ class Nivel1 extends Phaser.Scene{
 
     agarrarManzana(player, manzanas){
         manzanas.destroy(manzanas.x, manzanas.y)
-        puntuacion = puntuacion + 5
+        this.puntuacion += 2
+        player.anims.play("right4")
+        //scoreText.setText('' + score);
+        this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
-        textoPuntuacion.setText("Puntuacion: " + puntuacion)
-        console.log(puntuacion)
         return false;
     }
 
     agarrarNaranja(player, naranjas){
         naranjas.destroy(naranjas.x, naranjas.y)
-        puntuacion = puntuacion +2
+        this.puntuacion += 2
+        player.anims.play("right2")
+        //scoreText.setText('' + score);
+        this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
-        textoPuntuacion.setText("Puntuacion: " + puntuacion)
-        console.log(puntuacion)
         return false;
     
     }
 
     agarrarBanana(player, bananas){
         bananas.destroy(bananas.x, bananas.y)
-        puntuacion = puntuacion + 1
+        this.puntuacion += 1
+        player.anims.play("right3")
+        //scoreText.setText('' + score);
+        this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
-        textoPuntuacion.setText("Puntuacion: " + puntuacion)
-        console.log(puntuacion)
         return false;
     }
 

@@ -40,10 +40,8 @@ var pinchos;
 var powerup;
 var monedaLayer;
 var monedas;
-var puntuacion = 0;
 var salto;
 var pinchosObjects;
-var vidas = 3;
 var meta;
 var naranjas;
 var naranjasLayer;
@@ -58,8 +56,10 @@ var fondo;
 var timeText;
 var timedEvent;
 var initialTime = 30;
-var textoVidas;
-var textoPuntuacion;
+var playerSalta;
+var cantidadSaltos = 0;
+var empezarTexto;
+
 
 
 
