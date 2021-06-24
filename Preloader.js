@@ -7,7 +7,7 @@ class Preloader extends Phaser.Scene{
         this.registry.set('vidas', 3)
         this.load.audio("saltar", "./assets/musica_sonidos/saltar.wav")
         this.load.audio("fruta", "./assets/musica_sonidos/fruta.wav")
-        this.load.audio("correr", "./assets/musica_sonidos/correr.wav")
+        this.load.audio("correr", "./assets/musica_sonidos/correr.mp3")
         this.load.audio("musicafondo", "./assets/musica_sonidos/Rabbit_Run.mp3")
         this.load.image("tiles","./assets/tiles/tiles.png")
         this.load.image("tiles2", "./assets/tiles/tiles2.png")

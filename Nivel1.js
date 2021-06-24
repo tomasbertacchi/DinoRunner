@@ -19,7 +19,7 @@ class Nivel1 extends Phaser.Scene{
         })
 
         this.saltar = this.sound.add("saltar",{
-            volume: 0.5,
+            volume: 0.1,
             loop: false
         })
         this.musica.play();
@@ -34,6 +34,8 @@ class Nivel1 extends Phaser.Scene{
         gameOver = false;
         this.vidas = 3;
         this.puntuacion = 0;
+        this.tiempoInicial = 30;
+        this.timedEvent = true;
 
         // BACKGROUND
         var background = this.add.image(430,400, "cielo")
@@ -167,6 +169,9 @@ class Nivel1 extends Phaser.Scene{
     }
     
     update(){
+
+        const isJumpJustDown = Phaser.Input.Keyboard.JustDown(cursors.up)
+        const tocaSuelo = player.body.blocked.down
         if (gameOver)
         {       
             return
@@ -177,13 +182,9 @@ class Nivel1 extends Phaser.Scene{
             empezarTexto.setVisible(false)
         }
 
-        const isJumpJustDown = Phaser.Input.Keyboard.JustDown(cursors.up)
-        const tocaSuelo = player.body.blocked.down
-
         //SALTO JUGADOR. FLECHA ARRIBA + JUGADOR TOCANDO SUELO.
         if(cursors.up.isDown && tocaSuelo)
-            player.setVelocityY(-300)
-            cantidadSaltos ++;
+            this.playerSalta();
         if(tocaSuelo && !isJumpJustDown){
             cantidadSaltos = 0;
         }
@@ -196,9 +197,17 @@ class Nivel1 extends Phaser.Scene{
 
     }
 
+    playerSalta(){
+        player.setVelocityY(-300)
+        this.saltar.play();
+    }
+
+    sonidoCorrer(){
+        this.correr.play();
+    }
     empiezaCorrer (){
         player.setVelocityX(150)
-        player.anims.play("right", true)
+        player.anims.play("right")
     }
 
     hitPinchos(player, spikes){
@@ -207,6 +216,7 @@ class Nivel1 extends Phaser.Scene{
         player.setX(10)
         player.setY(720)
         console.log("pierde vida")
+        this.correr.pause();
     }
 
     gameOver() {   
@@ -249,7 +259,6 @@ class Nivel1 extends Phaser.Scene{
         manzanas.destroy(manzanas.x, manzanas.y)
         this.puntuacion += 2
         player.anims.play("right4")
-        //scoreText.setText('' + score);
         this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
         return false;
@@ -259,7 +268,6 @@ class Nivel1 extends Phaser.Scene{
         naranjas.destroy(naranjas.x, naranjas.y)
         this.puntuacion += 2
         player.anims.play("right2")
-        //scoreText.setText('' + score);
         this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
         return false;
@@ -270,7 +278,6 @@ class Nivel1 extends Phaser.Scene{
         bananas.destroy(bananas.x, bananas.y)
         this.puntuacion += 1
         player.anims.play("right3")
-        //scoreText.setText('' + score);
         this.registry.set('agarrafruta', this.puntuacion);
         this.fruta.play();
         return false;
@@ -280,10 +287,10 @@ class Nivel1 extends Phaser.Scene{
     onSecond() {
         if (! gameOver)
         {       
-            initialTime = initialTime - 1; // One second
-            timeText.setText('Tiempo: ' + initialTime);
-            if (initialTime == 0) {
-                timedEvent.paused = true;
+            this.registry.set ("tiempo", this.tiempoInicial)
+            this.tiempoInicial = this.tiempoInicial- 1; // One second
+            timeText.setText('Tiempo: ' + this.tiempoInicial);
+            if (this.tiempoInicial == 0) {
                 this.gameOver()
             }            
         }
