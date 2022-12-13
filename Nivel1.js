@@ -136,6 +136,15 @@ class Nivel1 extends Phaser.Scene{
         velocidad = 150;
         salto = -310;
 
+        //monedas
+        moneda = this.physics.add.sprite(100, 700, 'moneda')
+        this.physics.add.collider(moneda,plataformas)
+        this.physics.add.overlap(player, moneda, this.agarrarManzana, null, this);
+                //animacion monedas//
+        moneda.anims.play("girar", true)
+
+        
+
       //COLLIDERS GENERALES
         this.physics.add.overlap(player, manzanas, this.agarrarManzana, null, this);
         this.physics.add.overlap(player, naranjas, this.agarrarNaranja, null, this);

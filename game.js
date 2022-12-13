@@ -1,19 +1,15 @@
 let game;
 
 let gameConfig = {
-    type: Phaser.WEBGL,
+    type: Phaser.AUTO,
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
         parent: "thegame",
         width: 1024,
         height: 768,
+        zoom: 2
       },
     scene: [Preloader,MainMenu,Tutorial,Nivel1,GameUI,Nivel2,GameUI2,Puntuacion,Creditos],
-
-    scale: {
-        zoom: 1
-    },
 
     physics: {
         default: "arcade",
@@ -80,6 +76,7 @@ var musicamenu;
 var agarroPowerUp;
 var arriba;
 var spacebar;
+var moneda;
 
 
 

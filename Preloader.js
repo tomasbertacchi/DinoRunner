@@ -48,6 +48,7 @@ class Preloader extends Phaser.Scene{
         this.load.image("boton_tutorial", "./assets/images/GUI/boton_tutorial.png");
         this.load.image("portal", "./assets/images/background/portal.png");
         this.load.image("creditos", "./assets/images/GUI/creditos.png");
+        this.load.spritesheet("moneda", "./assets/images/player/moneda.png",{frameWidth: 14, frameHeight: 28});
     }
     create(){
         this.scene.start("menu");
@@ -60,7 +61,14 @@ class Preloader extends Phaser.Scene{
             frameRate: 10,
             repeat: -1
         });
-    
+
+        this.anims.create({
+            key: 'girar',
+            frames: this.anims.generateFrameNumbers('moneda', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
 
 
 
