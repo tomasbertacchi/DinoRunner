@@ -206,7 +206,7 @@ class Nivel1 extends Phaser.Scene{
         // timed event = llama cada 1 segundo la funcion onsecond, que resta el tiempo cada 1 segundo
         this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onSecond, callbackScope: this, loop: true });
         this.comenzar = this.time.addEvent({ delay: 6000, callback: this.tocaPlataforma, callbackScope: this, loop: false });
-        camara.setZoom(1)    
+        camara.setZoom(2)    
 
         //contador
         this.cambia4 = this.time.addEvent({ delay: 1000, callback: this.cambia4, callbackScope: this, loop: false });
