@@ -5,7 +5,11 @@ class Nivel1 extends Phaser.Scene{
 
     create(){
         this.scene.run("ui")
-        
+
+        enemigoderecha1 = true;
+        enemigoderecha2 = true;
+        enemigoderecha3 = true;
+
         //sonidos y musica
         this.musica = this.sound.add("musicafondo",{
             volume: 0.1,
@@ -54,8 +58,12 @@ class Nivel1 extends Phaser.Scene{
         const tilemap3 = mapa.addTilesetImage("tiles3", "tiles3")
 
         //LAYER DE TILED 
+        plataformaborde = mapa.createStaticLayer("bordes", tilemap3)
         plataformas = mapa.createStaticLayer("plataformas", tilemap3)
         fondo = mapa.createStaticLayer("fondo", tilemap3)
+
+        plataformaborde.setVisible(false);
+
 
         //LAYER DE OBJETOS DE TILED
         naranjasLayer = mapa.getObjectLayer("naranja")["objects"]
@@ -119,6 +127,7 @@ class Nivel1 extends Phaser.Scene{
 
         //AGREGA PROPIEDAD DE COLISION A LAYER DE TILED CON LA PROPIEDAD COLLIDES ACTIVADA.
         plataformas.setCollisionByProperty({collides: true})
+        plataformaborde.setCollisionByProperty({collides: true})
 
         //CAMARA
         camara = this.cameras.main;
@@ -137,14 +146,55 @@ class Nivel1 extends Phaser.Scene{
         salto = -310;
 
         //monedas
-        moneda = this.physics.add.sprite(100, 700, 'moneda')
+        moneda = this.physics.add.sprite(200, 700, 'moneda')
         this.physics.add.collider(moneda,plataformas)
         this.physics.add.overlap(player, moneda, this.agarrarManzana, null, this);
                 //animacion monedas//
         moneda.anims.play("girar", true)
 
+        moneda2 = this.physics.add.sprite(1000, 700, 'moneda')
+        this.physics.add.collider(moneda2,plataformas)
+        this.physics.add.overlap(player, moneda2, this.agarrarManzana, null, this);
+                //animacion monedas//
+        moneda2.anims.play("girar", true)
+
+        moneda3 = this.physics.add.sprite(2700, 400, 'moneda')
+        this.physics.add.collider(moneda3,plataformas)
+        this.physics.add.overlap(player, moneda3, this.agarrarManzana, null, this);
+                //animacion monedas//
+        moneda3.anims.play("girar", true)
+
+        //enemigo
+        
+        enemigo = this.physics.add.sprite(200,700,"enemigo",0)
+        enemigo.setSize(20)
+        enemigo.setScale(0.7)
+        
+        this.physics.add.collider(enemigo,plataformas)
+        this.physics.add.collider(player,enemigo, this.hitPinchos, null, this);
+        this.physics.add.collider(enemigo, plataformaborde, this.cambiarDirection, null, this)
+
+        enemigo2 = this.physics.add.sprite(1000,700,"enemigo",0)
+        enemigo2.setSize(20)
+        enemigo2.setScale(0.7)
+        
+        this.physics.add.collider(enemigo2,plataformas)
+        this.physics.add.collider(player,enemigo2, this.hitPinchos, null, this);
+        this.physics.add.collider(enemigo2, plataformaborde, this.cambiarDirection2, null, this)
+
+        enemigo3 = this.physics.add.sprite(2700,400,"enemigo",0)
+        enemigo3.setSize(20)
+        enemigo3.setScale(0.7)
+        
+        this.physics.add.collider(enemigo3,plataformas)
+        this.physics.add.collider(player,enemigo3, this.hitPinchos, null, this);
+        this.physics.add.collider(enemigo3, plataformaborde, this.cambiarDirection3, null, this)
         
 
+        
+        
+
+        
       //COLLIDERS GENERALES
         this.physics.add.overlap(player, manzanas, this.agarrarManzana, null, this);
         this.physics.add.overlap(player, naranjas, this.agarrarNaranja, null, this);
@@ -156,7 +206,7 @@ class Nivel1 extends Phaser.Scene{
         // timed event = llama cada 1 segundo la funcion onsecond, que resta el tiempo cada 1 segundo
         this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onSecond, callbackScope: this, loop: true });
         this.comenzar = this.time.addEvent({ delay: 6000, callback: this.tocaPlataforma, callbackScope: this, loop: false });
-        camara.setZoom(2)    
+        camara.setZoom(1)    
 
         //contador
         this.cambia4 = this.time.addEvent({ delay: 1000, callback: this.cambia4, callbackScope: this, loop: false });
@@ -189,11 +239,83 @@ class Nivel1 extends Phaser.Scene{
             this.gameOver();
         }
 
+        if (enemigoderecha1 === true)
+        {
+            enemigo.setVelocityX(50);
+            enemigo.flipX = false;
+            console.log("derecha")
+        }
+        else if (enemigoderecha1 === false)
+        {
+            enemigo.setVelocityX(-50);
+            enemigo.flipX = true;
+            console.log("izquierda")
+        }
+
+        if (enemigoderecha2 === true)
+        {
+            enemigo2.setVelocityX(50);
+            enemigo2.flipX = false;
+            console.log("derecha")
+        }
+        else if (enemigoderecha2 === false)
+        {
+            enemigo2.setVelocityX(-50);
+            enemigo2.flipX = true;
+            console.log("izquierda")
+        }
+
+        if (enemigoderecha3 === true)
+        {
+            enemigo3.setVelocityX(50);
+            enemigo3.flipX = false;
+            console.log("derecha")
+        }
+        else if (enemigoderecha3 === false)
+        {
+            enemigo3.setVelocityX(-50);
+            enemigo3.flipX = true;
+            console.log("izquierda")
+        }
+
         camara.centerOn(player.x, player.y)
         
         musicamenu.pause();
+
+        enemigo.anims.play("correr", true)
+        enemigo2.anims.play("correr", true)
+        enemigo3.anims.play("correr", true)
     
     }
+
+
+    cambiarDirection(){
+        if (enemigoderecha1=== true){
+            enemigoderecha1= false
+        }
+        else{
+            enemigoderecha1= true
+        }
+    }
+
+    cambiarDirection2(){
+        if (enemigoderecha2=== true){
+            enemigoderecha2= false
+        }
+        else{
+            enemigoderecha2= true
+        }
+    }
+
+    cambiarDirection3(){
+        if (enemigoderecha3=== true){
+            enemigoderecha3= false
+        }
+        else{
+            enemigoderecha3= true
+        }
+    }
+
 
     tocaPlataforma(){
         player.setVelocityX(velocidad);
@@ -235,6 +357,12 @@ class Nivel1 extends Phaser.Scene{
         player.setX(10)
         console.log("pierde vida")
         player.setVelocityX(velocidad)
+    }
+
+    comienzaCorrer(){
+        enemigo.setVelocityX(100)
+        enemigo.anims.play("correr")
+        enemigo.flipX(false);
     }
 
     gameOver() {   

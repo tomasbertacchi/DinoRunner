@@ -49,6 +49,7 @@ class Preloader extends Phaser.Scene{
         this.load.image("portal", "./assets/images/background/portal.png");
         this.load.image("creditos", "./assets/images/GUI/creditos.png");
         this.load.spritesheet("moneda", "./assets/images/player/moneda.png",{frameWidth: 14, frameHeight: 28});
+        this.load.spritesheet("enemigo", "./assets/images/player/enemigo.png",{frameWidth: 32, frameHeight: 32});
     }
     create(){
         this.scene.start("menu");
@@ -69,6 +70,12 @@ class Preloader extends Phaser.Scene{
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'correr',
+            frames: this.anims.generateFrameNumbers('enemigo', { start: 0, end: 11 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
 
 

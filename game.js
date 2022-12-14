@@ -7,7 +7,8 @@ let gameConfig = {
         parent: "thegame",
         width: 1024,
         height: 768,
-        zoom: 2
+        zoom: 1
+
       },
     scene: [Preloader,MainMenu,Tutorial,Nivel1,GameUI,Nivel2,GameUI2,Puntuacion,Creditos],
 
@@ -15,7 +16,7 @@ let gameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 800 },
-            debug: false,
+            debug: true,
         }
     }
 
@@ -77,6 +78,17 @@ var agarroPowerUp;
 var arriba;
 var spacebar;
 var moneda;
+var enemigo;
+var enemigo2;
+var enemigo3;
+var plataformaborde;
+var enemigoderecha1;
+var enemigoderecha2;
+var enemigoderecha3;
+var choqueLayer;
+var moneda2;
+var moneda3;
+
 
 
 
